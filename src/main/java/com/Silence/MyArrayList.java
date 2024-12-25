@@ -5,7 +5,7 @@ public class MyArrayList<T> {
 
     private int size;
 
-    private MyLinked myLinked;
+    private MyQueue myQueue;
 
     private int elementIndex = 0;
 
@@ -59,7 +59,7 @@ public class MyArrayList<T> {
         map = new int[20][1];
         for (int i = 1; i <=20; i++) {
             System.out.print("||    ");
-            Object[] objects = myLinked.peekAll();
+            Object[] objects = myQueue.peekAll();
             for (int i1 = 0; i1 < objects.length; i1++) {
                 Double[] object = (Double[]) objects[i1];
                 if (object[0] == 20-i){
@@ -89,7 +89,7 @@ public class MyArrayList<T> {
     }
 
     private void calculateLocation() {
-        myLinked = new MyLinked<Double[]>();
+        myQueue = new MyQueue<Double[]>();
         //两个数字记录，第一个记录阶层，第二个记录对应的值
         Double[] Locations;
         //Y方向上，一个为0.1的比率  最多为rate = 5 也就是50个
@@ -107,7 +107,7 @@ public class MyArrayList<T> {
             Double stage = (double) Math.round(rate/maxRate);
             Locations[0] = stage;
             Locations[1] = rate;
-            myLinked.add(Locations);
+            myQueue.add(Locations);
         }
     }
 

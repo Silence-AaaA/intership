@@ -1,17 +1,17 @@
 package com.Silence;
 
-public class MyLinked<T> {
+public class MyQueue<T> {
     private T[] element;
     private int size;
     private int rear = 0;
     private int tail = 0;
     private final int DEFAULT_CAPACITY = 50;
-    public MyLinked() {
+    public MyQueue() {
         element = (T[]) new Object[DEFAULT_CAPACITY];
         size = DEFAULT_CAPACITY;
     }
 
-    public MyLinked(int size) {
+    public MyQueue(int size) {
         element = (T[]) new Object[size];
         this.size = size;
     }
