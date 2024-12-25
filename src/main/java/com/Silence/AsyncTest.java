@@ -20,6 +20,7 @@ public class AsyncTest {
         while(!virusStr.equals("0") && !peoStr.equals("0")){
             atomicInteger.incrementAndGet();
             /**
+             *
              * 输入字符串前置处理
              */
             int virLength = virusStr.length();
