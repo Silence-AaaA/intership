@@ -1,6 +1,6 @@
-package com.Silence;
+package com.Silence.pojo;
 
-public class BaseClass {
+public class BaseEntity {
     /**
      * 查找时间
      */

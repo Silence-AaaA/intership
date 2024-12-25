@@ -1,11 +1,15 @@
 package com.Silence;
 
+import com.Silence.pojo.BFEntity;
+import com.Silence.pojo.KMPEntity;
+import com.Silence.pojo.MyArrayListEntity;
+
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AsyncTest {
-    public static MyArrayList<String> list = new MyArrayList();
-    public static MyArrayList<Double> Time_V_Map = new MyArrayList();
+    public static MyArrayListEntity<String> list = new MyArrayListEntity();
+    public static MyArrayListEntity<Double> Time_V_Map = new MyArrayListEntity();
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         System.out.println("👉请输入要处理的模式串👈");
@@ -24,27 +28,28 @@ public class AsyncTest {
             String nowPeoStr = peoStr;
             //将病毒环状DNA设置为环
             virusStr+=virusStr;
-            //将人的DNA拼接为一个伪环状
-            peoStr+=peoStr;
-            KMP kmp = null;
-            BF bf = null;
+            KMPEntity kmpEntity = null;
+            BFEntity bfEntity = null;
             for (int i = 0; i < virLength; i++) {
-                String subVir = virusStr.substring(i, virLength);
+                String subVir = virusStr.substring(i, i+virLength);
                 /**
                  * 启动KMP BF算法
                  */
-                if (kmp == null || !kmp.getResult())  {
-                    kmp = new KMP(subVir, peoStr);
-                    kmp.run();
+                System.out.println(System.currentTimeMillis());
+                if (kmpEntity == null || !kmpEntity.getResult())  {
+                    kmpEntity = new KMPEntity(subVir, peoStr);
+                    kmpEntity.run();
                 }
-                if (bf == null || !bf.getResult()) {
-                    bf = new BF(subVir,peoStr);
-                    bf.run();
+
+                System.out.println(System.currentTimeMillis());
+                if (bfEntity == null || !bfEntity.getResult()) {
+                    bfEntity = new BFEntity(subVir,peoStr);
+                    bfEntity.run();
                 }
             }
-            list.add(atomicInteger + ":针对模式串:"+nowVirusStr+" 以及文本:"+nowPeoStr+" 此次使用KMP运行的的结果为:" + (kmp.getResult()?"YES":"NO") + "，花费了" + kmp.getRunTime() + "纳秒, 调用了" +kmp.getCallNumber()+"次");
-            list.add(atomicInteger + ":针对模式串:"+nowVirusStr+" 以及文本:"+nowPeoStr+" 此次使用BF运行的的结果为:"+(bf.getResult()?"YES":"NO") + "，花费了" + bf.getRunTime() + "纳秒, 调用了" +bf.getCallNumber()+"次");
-            double rate = (double)kmp.getRunTime() / (double)bf.getRunTime();
+            list.add(atomicInteger + ":针对模式串:"+nowVirusStr+" 以及文本:"+nowPeoStr+" 此次使用KMP运行的的结果为:" + (kmpEntity.getResult()?"YES":"NO") + "，花费了" + kmpEntity.getRunTime() + "纳秒, 调用了" + kmpEntity.getCallNumber()+"次");
+            list.add(atomicInteger + ":针对模式串:"+nowVirusStr+" 以及文本:"+nowPeoStr+" 此次使用BF运行的的结果为:"+(bfEntity.getResult()?"YES":"NO") + "，花费了" + bfEntity.getRunTime() + "纳秒, 调用了" + bfEntity.getCallNumber()+"次");
+            double rate = (double) kmpEntity.getRunTime() / (double) bfEntity.getRunTime();
             //保留两位小数
             Time_V_Map.add(Double.valueOf(String.format("%.2f",rate)));
             System.out.println("👉请输入要处理的模式串👈");

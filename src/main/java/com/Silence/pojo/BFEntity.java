@@ -1,7 +1,7 @@
-package com.Silence;
+package com.Silence.pojo;
 
 
-public class BF extends BaseClass implements Runnable{
+public class BFEntity extends BaseEntity implements Runnable{
     /**
      * 模式串
      */
@@ -11,18 +11,20 @@ public class BF extends BaseClass implements Runnable{
      */
     private String text;
 
-
-
-    public BF(String pat, String text) {
+    public BFEntity(String pat, String text) {
         this.pat = pat;
         this.text = text;
     }
 
-    public BF(String pat) {
+    /**
+     * 初始化模式串
+     * @param pat
+     */
+    public BFEntity(String pat) {
         this.pat = pat;
     }
 
-    public BF(){
+    public BFEntity(){
         pat = null;
         text = null;
     }
@@ -43,7 +45,11 @@ public class BF extends BaseClass implements Runnable{
         this.text = text;
     }
 
-
+    /**
+     * BF算法
+     * @param text
+     * @return
+     */
     public  int bruteForceSearch(String text) {
         if (!getResult()) {
             Long begin = System.nanoTime();
@@ -74,7 +80,9 @@ public class BF extends BaseClass implements Runnable{
         return -1;
     }
 
-    //异步调用
+    /**
+     * 开启线程
+     */
     @Override
     public void run() {
         if (pat == null || text == null) {

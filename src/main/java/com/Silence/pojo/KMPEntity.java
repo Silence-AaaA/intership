@@ -1,7 +1,7 @@
-package com.Silence;
+package com.Silence.pojo;
 
 //相同的模式串可以匹配多个不同的字符串
-public class KMP extends BaseClass implements Runnable{
+public class KMPEntity extends BaseEntity implements Runnable{
     /**
      * 模式串
      */
@@ -16,12 +16,12 @@ public class KMP extends BaseClass implements Runnable{
     private String stringTxt;
 
 
-    public KMP(String pat) {
+    public KMPEntity(String pat) {
         this.pat = pat;
         modify();
     }
 
-    public KMP(String pat,String stringTxt) {
+    public KMPEntity(String pat, String stringTxt) {
         this.pat = pat;
         this.stringTxt = stringTxt;
         modify();
@@ -35,8 +35,6 @@ public class KMP extends BaseClass implements Runnable{
         this.pat = pat;
     }
 
-
-
     public String getStringTxt() {
         return stringTxt;
     }
@@ -45,6 +43,9 @@ public class KMP extends BaseClass implements Runnable{
         this.stringTxt = stringTxt;
     }
 
+    /**
+     * 初始化DP数组
+     */
     private void modify(){
         //初始化pat 模式串
         int M = pat.length();
@@ -57,7 +58,7 @@ public class KMP extends BaseClass implements Runnable{
         //设置影子X 初始值为0
         int X = 0;
         for (int i = 1; i < M; i++) {
-            for (int j = 0; j < 256; j++) {
+            for (int j = 0; j < 40869; j++) {
                 if (pat.charAt(i) == j) {
                     //两者相等的条件下，说明匹配到了，记录其为当前位置 + 1
                     dp[i][j] = i+1;
@@ -71,6 +72,11 @@ public class KMP extends BaseClass implements Runnable{
         }
     }
 
+    /**
+     * 搜索，匹配字符串
+     * @param strTxt
+     * @return
+     */
     public int search(String strTxt) {
         //保证如果找到了，那么就不再再次进行寻找
         if (!getResult()) {
@@ -103,8 +109,9 @@ public class KMP extends BaseClass implements Runnable{
         return -1;
     }
 
-
-    //异步调用
+    /**
+     * 开启线程
+     */
     @Override
     public void run() {
         if (pat == null || stringTxt == null) {
