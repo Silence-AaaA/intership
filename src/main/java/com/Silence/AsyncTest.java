@@ -1,64 +1,44 @@
 package com.Silence;
 
-import com.Silence.pojo.BFEntity;
-import com.Silence.pojo.KMPEntity;
-import com.Silence.pojo.MyArrayListEntity;
+import com.Silence.domain.*;
 
-import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AsyncTest {
-    public static MyArrayListEntity<String> list = new MyArrayListEntity();
-    public static MyArrayListEntity<Double> Time_V_Map = new MyArrayListEntity();
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        System.out.println("👉请输入要处理的模式串👈");
-        System.out.println("👉请输入要处理的文本👈");
-        String virusStr = in.next();
-        String peoStr = in.next();
-        AtomicInteger atomicInteger = new AtomicInteger(0);
-        while(!virusStr.equals("0") && !peoStr.equals("0")){
-            atomicInteger.incrementAndGet();
-            /**
-             *
-             * 输入字符串前置处理
-             */
-            int virLength = virusStr.length();
-            //保存当前输入的数据，方便之后统计使用
-            String nowVirusStr = virusStr;
-            String nowPeoStr = peoStr;
-            //将病毒环状DNA设置为环
-            virusStr+=virusStr;
-            KMPEntity kmpEntity = null;
-            BFEntity bfEntity = null;
-            for (int i = 0; i < virLength; i++) {
-                String subVir = virusStr.substring(i, i+virLength);
-                /**
-                 * 启动KMP BF算法
-                 */
-                System.out.println(System.currentTimeMillis());
-                if (kmpEntity == null || !kmpEntity.getResult())  {
-                    kmpEntity = new KMPEntity(subVir, peoStr);
-                    kmpEntity.run();
-                }
 
-                System.out.println(System.currentTimeMillis());
-                if (bfEntity == null || !bfEntity.getResult()) {
-                    bfEntity = new BFEntity(subVir,peoStr);
-                    bfEntity.run();
-                }
-            }
-            list.add(atomicInteger + ":针对模式串:"+nowVirusStr+" 以及文本:"+nowPeoStr+" 此次使用KMP运行的的结果为:" + (kmpEntity.getResult()?"YES":"NO") + "，花费了" + kmpEntity.getRunTime() + "纳秒, 调用了" + kmpEntity.getCallNumber()+"次");
-            list.add(atomicInteger + ":针对模式串:"+nowVirusStr+" 以及文本:"+nowPeoStr+" 此次使用BF运行的的结果为:"+(bfEntity.getResult()?"YES":"NO") + "，花费了" + bfEntity.getRunTime() + "纳秒, 调用了" + bfEntity.getCallNumber()+"次");
-            double rate = (double) kmpEntity.getRunTime() / (double) bfEntity.getRunTime();
-            //保留两位小数
-            Time_V_Map.add(Double.valueOf(String.format("%.2f",rate)));
+    //常数定义 防止魔数
+    private final static int NOT_FOUNT = -1;
+    private final static MyString ZERO = new MyString("0");
+    static MyArrayListEntity<String> list = new MyArrayListEntity();
+    static AtomicInteger count = new AtomicInteger(0);
+
+    public static void main(String[] args) {
+        while(true){
             System.out.println("👉请输入要处理的模式串👈");
             System.out.println("👉请输入要处理的文本👈");
-            virusStr = in.next();
-            peoStr = in.next();
+            MyScanner in = new MyScanner(System.in);
+            MyString virusStr = in.next();
+            MyString peoStr = in.next();
+            //对病毒字符串进行处理
+            if (virusStr.equals(ZERO) && peoStr.equals(ZERO)){
+                break;
+            }
+            MyString circleVirusStr = new MyString(virusStr +""+ virusStr);
+            boolean OneKMP = false;
+            boolean TwoKMP = false;
+            boolean BF  =false;
+            for (int i = 0; i < virusStr.length() && !OneKMP; i++) {
+                BF = peoStr.indexOfByBF(circleVirusStr.substring(i, i + virusStr.length()))!=NOT_FOUNT?true:false;
+                TwoKMP = peoStr.indexOfByKMP(circleVirusStr.substring(i, i + virusStr.length()))!=NOT_FOUNT?true:false;
+                OneKMP = peoStr.indexOfByKMP(circleVirusStr.substring(i, i + virusStr.length()), peoStr)!=NOT_FOUNT?true:false;
+            }
+            count.incrementAndGet();
+            list.add("------------------第"+count +"次------------------------");
+            list.add(BF?count+":BF YES":count+":DP NO");
+            list.add(OneKMP?count+":KMP-ONE YES":count+":KMP-ONE NO");
+            list.add(TwoKMP?count+":KMP-TWO YES":count+":KMP-TWO NO");
+            list.add("---------------------------------------------");
         }
-        list.traverse();
-        Time_V_Map.createTimeRateMap();
+        list.traverseAllElement();
     }
 }
